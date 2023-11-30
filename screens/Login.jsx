@@ -23,7 +23,7 @@ const LoginSchema = yup.object({
 
 export default function Login({navigation}) {
     const platform = Platform.OS;
-    const [valid, setValid] = React.useState(false);
+    const [valid, setValid] = React.useState(true);
 
     const handleLogin = (values) => {
         signInWithEmailAndPassword(auth, values.email, values.password)
@@ -98,11 +98,10 @@ export default function Login({navigation}) {
 
                 <View>
                     <Text style={styles.bottomText}>Don't have an account?</Text>
-                    <TouchableOpacity onPress={() => navigation.replace('Signup')}>
+                    <TouchableOpacity onPress={() => navigation.replace('Register')}>
                         <Text style={styles.bottomTextBold}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
-
             </View>
         </ImageBackground>
     )

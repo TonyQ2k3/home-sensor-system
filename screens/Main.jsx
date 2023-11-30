@@ -1,14 +1,24 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, Platform, ScrollView } from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, Platform, ScrollView, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalColors } from '../globalStyles';
-import { StatusBar } from 'expo-status-bar';
+import {auth} from '../utils/firebase';
+import { signOut } from 'firebase/auth';
 
-function Header() {
+function Header({ logOut }) {
+    const handleSignOut = () => {
+        signOut(auth).then(() => {
+            Alert.alert('You logged out successfully');
+            logOut();
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     return (
         <View style={styles.header}>
             <Text style={{fontSize: 30, fontWeight: 'bold'}}>Dashboard</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleSignOut}>
                 <MaterialCommunityIcons name='exit-to-app' size={30} />
             </TouchableOpacity>
         </View>
@@ -49,11 +59,6 @@ export default function Main({navigation}) {
     const [humid, setHumid] = React.useState(0);
     const [smoke, setSmoke] = React.useState(0);
 
-    const fetchData = async() => {
-        const message = await fetch('https://blynk.cloud/external/api/get?token=dRy4l-vUrswJ9nJNR3kR8L_7vhYN-J1u&v0');
-        return message.json();
-    }
-
     const getStatus = () => {
         if (temp < 50) {
             return <Text style={[styles.status, {color: 'green'}]}> Safe</Text>;
@@ -62,15 +67,13 @@ export default function Main({navigation}) {
     }
 
     React.useEffect(() => {
-        console.log(Platform.OS);
-        const data = fetchData();
-        console.log(data);
+        
     }, []);
 
     return (
         <ImageBackground style={styles.mainContainer} source={require('../assets/home_desktop.jpg')} resizeMode='cover'>
             <ScrollView style={{marginTop: platform === 'web'? 0: 24}}>
-                <Header />
+                <Header logOut={() => {navigation.navigate('Login')}} />
                 <View style={styles.bodyContainer}>
                     <Text style={styles.status}>
                         Status:  

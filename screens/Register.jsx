@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, View, StyleSheet, ImageBackground, Platform, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { globalColors, globalStyles } from '../globalStyles';
+import { Text, View, StyleSheet, ImageBackground, Platform, TouchableOpacity, TextInput, Image } from 'react-native';
+import { globalStyles } from '../globalStyles';
 import { Formik } from 'formik';
 import { auth } from '../utils/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -39,8 +39,7 @@ export default function Register({navigation}) {
             updateProfile(auth.currentUser, {
                 displayName: values.username,
             });
-            Alert.alert('User registered successfully!');
-            navigation.navigate('SignUpBMI');
+            navigation.navigate('Main');
         })
         .catch(() => {
             setValid(false);
@@ -50,9 +49,8 @@ export default function Register({navigation}) {
 
     return (
         <ImageBackground style={globalStyles.container} source={require('../assets/home_desktop.jpg')} resizeMode='cover'>
-            <View
-                style={{flex: 1, alignItems: 'center', justifyContent: 'space-between', padding: 20}}
-            >
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'space-between', padding: 20}}>
+                <View />
                 <View style={[globalStyles.formContainer, {marginTop: 40}]}>
                     <Formik
                         initialValues={{email: '', password: ''}}
@@ -123,7 +121,7 @@ export default function Register({navigation}) {
                             {
                                 valid ? null : (
                                     <View style={{width: 250, marginTop: 10}}>
-                                        <Text style={{color: 'red', textAlign: 'center', flexWrap: 'wrap'}}>Either email or password is incorrect. Please double-check and try again.</Text>
+                                        <Text style={{color: 'red', textAlign: 'center', flexWrap: 'wrap'}}>There has been an error creating your account, please try again.</Text>
                                     </View>
                                 )
                             }
@@ -136,12 +134,11 @@ export default function Register({navigation}) {
                 </View>
 
                 <View>
-                    <Text style={styles.bottomText}>Don't have an account?</Text>
-                    <TouchableOpacity onPress={() => navigation.replace('Signup')}>
-                        <Text style={styles.bottomTextBold}>Sign Up</Text>
+                    <Text style={styles.bottomText}>Already have an account?</Text>
+                    <TouchableOpacity onPress={() => navigation.replace('Login')}>
+                        <Text style={styles.bottomTextBold}>Log in</Text>
                     </TouchableOpacity>
                 </View>
-
             </View>
         </ImageBackground>
     )
@@ -151,11 +148,6 @@ const styles = StyleSheet.create({
     login: {
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    logo: {
-        height: 130,
-        width: 240,
-        marginTop: 40,
     },
     title: {
         fontSize: 30,

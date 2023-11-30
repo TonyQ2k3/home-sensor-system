@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, View, StyleSheet, ImageBackground, ScrollView, Platform, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { globalColors, globalStyles } from '../globalStyles';
+import { Text, View, StyleSheet, ImageBackground, Platform, TouchableOpacity, TextInput, Image } from 'react-native';
+import { globalStyles } from '../globalStyles';
 import { Formik } from 'formik';
 import { auth } from '../utils/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -41,6 +41,7 @@ export default function Login({navigation}) {
             <View
                 style={{flex: 1, alignItems: 'center', justifyContent: 'space-between', padding: 20}}
             >
+                <View />
                 <View style={[globalStyles.formContainer, {marginTop: 40}]}>
                     <Formik
                         initialValues={{email: '', password: ''}}
@@ -111,11 +112,6 @@ const styles = StyleSheet.create({
     login: {
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    logo: {
-        height: 130,
-        width: 240,
-        marginTop: 40,
     },
     title: {
         fontSize: 30,

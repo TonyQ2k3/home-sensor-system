@@ -1,14 +1,24 @@
-import React, { useEffect } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, Platform, ScrollView } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Platform, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalColors } from '../globalStyles';
-import {db, auth} from "../utils/firebase";
-import {ref, onValue, set} from "firebase/database";
-function Header() {
+import { auth, db } from '../utils/firebase';
+import { signOut } from 'firebase/auth';
+import { ref, onValue } from '@firebase/database';
+
+function Header({ logOut }) {
+    const handleSignOut = () => {
+        signOut(auth).then(() => {
+            Alert.alert('You logged out successfully');
+            logOut();
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
     return (
         <View style={styles.header}>
-            <Text style={{fontSize: 30, fontWeight: 'bold'}}>Dashboard</Text>
-            <TouchableOpacity>
+            <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Dashboard</Text>
+            <TouchableOpacity onPress={handleSignOut}>
                 <MaterialCommunityIcons name='exit-to-app' size={30} />
             </TouchableOpacity>
         </View>
@@ -24,7 +34,7 @@ function TempCard({ value }) {
         </ImageBackground>
     )
 }
-function HumidCard({ value=0 }) {
+function HumidCard({ value = 0 }) {
     return (
         <ImageBackground source={require('../assets/humid.jpg')} style={styles.cardContainer} resizeMode='cover'>
             <Text style={styles.title}>Humidity</Text>
@@ -32,7 +42,7 @@ function HumidCard({ value=0 }) {
         </ImageBackground>
     )
 }
-function SmokeCard({ value=0 }) {
+function SmokeCard({ value = 0 }) {
     return (
         <ImageBackground source={require('../assets/smoke.jpg')} style={styles.cardContainer} resizeMode='cover'>
             <Text style={styles.title}>Smoke level</Text>
@@ -42,8 +52,9 @@ function SmokeCard({ value=0 }) {
 }
 
 
-export default function Main({navigation}) {
+export default function Main({ navigation }) {
     const platform = Platform.OS;
+    const userID = auth.currentUser.uid;
 
     const [temp, setTemp] = React.useState(0);
     const [humid, setHumid] = React.useState(0);
@@ -51,43 +62,42 @@ export default function Main({navigation}) {
 
     //fetch data from realtime firebase with key "DHT11/Temperature"
     const fetchData = () => {
-        const dataRef = ref(db, 'DHT11/Temperature');
-        const dataRef2 = ref(db, 'DHT11/Humidity');
-        const dataRef3 = ref(db, 'Gas');
+        //get userId
+        const userId = auth.currentUser.uid;
+        const dataRef = ref(db, userID + '/temperature');
+        const dataRef2 = ref(db, userID + '/humidity');
+        const dataRef3 = ref(db, userID + '/smoke');
         onValue(dataRef, (snapshot) => {
             const data = snapshot.val();
-            console.log("Data from Firebase (JSON):", Object.values(data));
-            setTemp(Object.values(data)[Object.values(data).length - 1]);
+            setTemp(data);
+            console.log(data);
+            console.log("Hello", userID);
         }
-        , (error) => {
-            console.error("Error fetching data from Firebase:", error);
-        });
+            , (error) => {
+                console.error("Error fetching data from Firebase:", error);
+            });
         onValue(dataRef2, (snapshot) => {
             const data = snapshot.val();
-            console.log("Data from Firebase (JSON):", Object.values(data));
-            setHumid(Object.values(data)[Object.values(data).length - 1]);
+            setHumid(data);
+
         }
-        , (error) => {
-            console.error("Error fetching data from Firebase:", error);
-        });
+            , (error) => {
+                console.error("Error fetching data from Firebase:", error);
+            });
         onValue(dataRef3, (snapshot) => {
             const data = snapshot.val();
-            console.log("Data from Firebase (JSON):", Object.values(data));
-            setSmoke(Object.values(data)[Object.values(data).length - 1]);
+            setSmoke(data); 
         }
-        , (error) => {
-            console.error("Error fetching data from Firebase:", error);
-        });
-
-
-
-      };
+            , (error) => {
+                console.error("Error fetching data from Firebase:", error);
+            });
+    };
 
     const getStatus = () => {
         if (temp < 50) {
-            return <Text style={[styles.status, {color: 'green'}]}> Safe</Text>;
+            return <Text style={[styles.status, { color: 'green' }]}> Safe</Text>;
         }
-        else return <Text style={[styles.status, {color: 'red'}]}> Critical</Text>;;
+        else return <Text style={[styles.status, { color: 'red' }]}> Critical</Text>;;
     }
 
     React.useEffect(() => {
@@ -99,11 +109,11 @@ export default function Main({navigation}) {
 
     return (
         <ImageBackground style={styles.mainContainer} source={require('../assets/home_desktop.jpg')} resizeMode='cover'>
-            <ScrollView style={{marginTop: platform === 'web'? 0: 24}}>
-                <Header />
+            <ScrollView style={{ marginTop: platform === 'web' ? 0 : 24 }}>
+                <Header logOut={() => { navigation.navigate('Login') }} />
                 <View style={styles.bodyContainer}>
                     <Text style={styles.status}>
-                        Status:  
+                        Status:
                         {
                             getStatus()
                         }
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     mainContainer: {
-        backgroundColor: globalColors.backgroundBlue, 
+        backgroundColor: globalColors.backgroundBlue,
         flex: 1,
     },
     bodyContainer: {
@@ -140,7 +150,7 @@ const styles = StyleSheet.create({
 
     },
     cardContainer: {
-        width: Platform.OS === 'web' ? 350: 250,
+        width: Platform.OS === 'web' ? 350 : 250,
         height: 175,
         backgroundColor: '#fff',
         borderRadius: 10,
@@ -157,7 +167,7 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     title: {
-        fontSize: Platform.OS === 'web' ? 28 : 24, 
+        fontSize: Platform.OS === 'web' ? 28 : 24,
         fontWeight: 'bold',
         color: '#fff'
     },

@@ -1,19 +1,31 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 import { getDatabase } from "firebase/database";
-
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyA2X2jGGbcToPBNIjljlZ3y-RBuh_W8FNk",
-  authDomain: "q2d-fire-system.firebaseapp.com",
-  databaseURL: "https://q2d-fire-system-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "q2d-fire-system",
-  storageBucket: "q2d-fire-system.appspot.com",
-  messagingSenderId: "161326644940",
-  appId: "1:161326644940:web:55e3af84ec6f47d67c0c69",
-  measurementId: "G-S78GHRCK2M"
+  apiKey: "AIzaSyCP0MaWsAZhpryeiiVGgGiNK7lYPgqUf8Q",
+  authDomain: "adruino-7b5a8.firebaseapp.com",
+  databaseURL: "https://adruino-7b5a8-default-rtdb.firebaseio.com",
+  projectId: "adruino-7b5a8",
+  storageBucket: "adruino-7b5a8.appspot.com",
+  messagingSenderId: "183983165199",
+  appId: "1:183983165199:web:5e64cdd69931c0c162787a",
+  measurementId: "G-CRZLSKV6VV"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+// Initialize Firebase
+// Initialize Firebase
+const app = initializeApp(firebaseConfig)
 
-export { app, db };
+// Initialize Cloud Firestore and get a reference to the service
+
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app)
+
+// Initialize Cloud Storage and get a reference to the service
+
+const db = getDatabase(app)
+export {auth, db }

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, Platform, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalColors } from '../globalStyles';
-import { StatusBar } from 'expo-status-bar';
-
+import {db, auth} from "../utils/firebase";
+import {ref, onValue, set} from "firebase/database";
 function Header() {
     return (
         <View style={styles.header}>
@@ -16,7 +16,7 @@ function Header() {
 }
 
 // Thẻ hiển thị thông số
-function TempCard({ value=0 }) {
+function TempCard({ value }) {
     return (
         <ImageBackground source={require('../assets/heat.jpg')} style={styles.cardContainer} resizeMode='cover'>
             <Text style={styles.title}>Temperature</Text>
@@ -49,10 +49,39 @@ export default function Main({navigation}) {
     const [humid, setHumid] = React.useState(0);
     const [smoke, setSmoke] = React.useState(0);
 
-    const fetchData = async() => {
-        const message = await fetch('https://blynk.cloud/external/api/get?token=dRy4l-vUrswJ9nJNR3kR8L_7vhYN-J1u&v0');
-        return message.json();
-    }
+    //fetch data from realtime firebase with key "DHT11/Temperature"
+    const fetchData = () => {
+        const dataRef = ref(db, 'DHT11/Temperature');
+        const dataRef2 = ref(db, 'DHT11/Humidity');
+        const dataRef3 = ref(db, 'Gas');
+        onValue(dataRef, (snapshot) => {
+            const data = snapshot.val();
+            console.log("Data from Firebase (JSON):", Object.values(data));
+            setTemp(Object.values(data)[Object.values(data).length - 1]);
+        }
+        , (error) => {
+            console.error("Error fetching data from Firebase:", error);
+        });
+        onValue(dataRef2, (snapshot) => {
+            const data = snapshot.val();
+            console.log("Data from Firebase (JSON):", Object.values(data));
+            setHumid(Object.values(data)[Object.values(data).length - 1]);
+        }
+        , (error) => {
+            console.error("Error fetching data from Firebase:", error);
+        });
+        onValue(dataRef3, (snapshot) => {
+            const data = snapshot.val();
+            console.log("Data from Firebase (JSON):", Object.values(data));
+            setSmoke(Object.values(data)[Object.values(data).length - 1]);
+        }
+        , (error) => {
+            console.error("Error fetching data from Firebase:", error);
+        });
+
+
+
+      };
 
     const getStatus = () => {
         if (temp < 50) {
@@ -64,6 +93,7 @@ export default function Main({navigation}) {
     React.useEffect(() => {
         console.log(Platform.OS);
         const data = fetchData();
+        console.log("Hello");
         console.log(data);
     }, []);
 

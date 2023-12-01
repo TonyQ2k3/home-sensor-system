@@ -6,6 +6,7 @@ import { auth, db } from '../utils/firebase';
 import { signOut } from 'firebase/auth';
 import { ref, onValue } from '@firebase/database';
 
+
 function Header({ logOut }) {
     const handleSignOut = () => {
         signOut(auth).then(() => {
@@ -48,6 +49,21 @@ function SmokeCard({ value = 0 }) {
             <Text style={styles.title}>Smoke level</Text>
             <Text style={styles.value}>{value}</Text>
         </ImageBackground>
+    )
+}
+
+function EmptyCard() {
+    return (
+        <View style={emptyCard.container}> 
+            <View style={emptyCard.iconContainer}>
+                <MaterialCommunityIcons name='fire-off' color='#dedede' size={40} />
+                <MaterialCommunityIcons name='water-off' color='#dedede' size={40}/>
+                <MaterialCommunityIcons name='wifi-off' color='#dedede' size={40}/>
+            </View>
+            <View style={emptyCard.textContainer}>
+                <Text style={emptyCard.text}>No data available. Please connect your sensors and try again.</Text>
+            </View>
+        </View>
     )
 }
 
@@ -118,11 +134,22 @@ export default function Main({ navigation }) {
                             getStatus()
                         }
                     </Text>
-                    <View style={styles.valuesContainer}>
-                        <TempCard value={temp} />
-                        <HumidCard value={humid} />
-                        <SmokeCard value={smoke} />
-                    </View>
+                    {
+                        temp > 0 && humid > 0 && smoke >= 0 ? (
+                            <View style={styles.valuesContainer}>
+                                <TempCard value={temp} />
+                                <HumidCard value={humid} />
+                                <SmokeCard value={smoke} />
+                            </View>
+                        )
+                        :
+                        (
+                            <View style={{height: '100%', justifyContent: 'center'}}>
+                                <EmptyCard />
+                            </View>
+                        )
+                    }
+                    
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -144,10 +171,10 @@ const styles = StyleSheet.create({
     },
     bodyContainer: {
         padding: 20,
+        alignItems: 'center'
     },
     valuesContainer: {
         alignItems: 'center',
-
     },
     cardContainer: {
         width: Platform.OS === 'web' ? 350 : 250,
@@ -174,5 +201,38 @@ const styles = StyleSheet.create({
     value: {
         fontSize: 30,
         color: '#fff',
+    },
+});
+
+
+const emptyCard = StyleSheet.create({
+    container: {
+        width: 300,
+        height: 300,
+        backgroundColor: '#fff',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        padding: 20,
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        width: '100%',
+    },
+    text: {
+        fontSize: 24,
+        textAlign: 'center',
+        flexWrap: 'wrap'
     },
 });

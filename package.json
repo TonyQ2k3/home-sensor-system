@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@emailjs/browser": "^3.11.0",
     "@expo/webpack-config": "^19.0.0",
     "@react-native-community/art": "^1.2.0",
     "@react-navigation/native": "^6.1.9",

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Platform, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalColors } from '../globalStyles';
 import { auth, db } from '../utils/firebase';
 import { signOut } from 'firebase/auth';
 import { ref, onValue } from '@firebase/database';
-
+import emailjs from '@emailjs/browser';
 
 function Header({ logOut }) {
     const handleSignOut = () => {
@@ -67,15 +67,31 @@ function EmptyCard() {
     )
 }
 
-
+// const sendEmail = ()=>{
+//     console.log("hello11" )
+//     emailjs.sendForm('service_0oexdbn', 'template_n8kb5iz', form.target, 'vRpK3hlM2u0_-RXFR')
+//     .then((result) => {
+//         console.log(result.text);
+//     }, (error) => {
+//         console.log(error.text);
+//     });
+// }
 export default function Main({ navigation }) {
     const platform = Platform.OS;
     const userID = auth.currentUser.uid;
+    
 
     const [temp, setTemp] = React.useState(0);
     const [humid, setHumid] = React.useState(0);
     const [smoke, setSmoke] = React.useState(0);
 
+    //function send email
+    const sendEmail = (temperature) => {
+        const currentEmail = auth.currentUser.email;
+        console.log(currentEmail)
+        console.log("hello11" )
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', {subject: "Alert somke", to_name: "Hello everyone", message: "Alert smoke: " + temperature, sender: "Dat", receiver: currentEmail} , 'vRpK3hlM2u0_-RXFR')
+    }
     //fetch data from realtime firebase with key "DHT11/Temperature"
     const fetchData = () => {
         //get userId
@@ -87,6 +103,7 @@ export default function Main({ navigation }) {
             const data = snapshot.val();
             setTemp(data);
             console.log(data);
+            sendEmail(data);
             console.log("Hello", userID);
         }
             , (error) => {

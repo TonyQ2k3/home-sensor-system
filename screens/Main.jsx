@@ -6,19 +6,25 @@ import { auth, db } from '../utils/firebase';
 import { signOut } from 'firebase/auth';
 import { ref, onValue } from '@firebase/database';
 
+// Import animations
+import { FadeInTemp, FadeInHumid, FadeInSmoke } from '../components/FadeAnim';
 
 function Header({ logOut }) {
+    const username = auth.currentUser.displayName;
+
     const handleSignOut = () => {
         signOut(auth).then(() => {
-            Alert.alert('You logged out successfully');
-            logOut();
+            if (confirm("Do you want to sign out?")) {
+                logOut();
+                alert('You logged out successfully');
+            }
         }).catch((error) => {
             console.log(error);
         });
     }
     return (
         <View style={styles.header}>
-            <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Dashboard</Text>
+            <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#fff' }}>{username}'s Home sensors</Text>
             <TouchableOpacity onPress={handleSignOut}>
                 <MaterialCommunityIcons name='exit-to-app' size={30} />
             </TouchableOpacity>
@@ -67,7 +73,6 @@ function EmptyCard() {
     )
 }
 
-
 export default function Main({ navigation }) {
     const platform = Platform.OS;
     const userID = auth.currentUser.uid;
@@ -78,16 +83,13 @@ export default function Main({ navigation }) {
 
     //fetch data from realtime firebase with key "DHT11/Temperature"
     const fetchData = () => {
-        //get userId
-        const userId = auth.currentUser.uid;
         const dataRef = ref(db, userID + '/temperature');
         const dataRef2 = ref(db, userID + '/humidity');
         const dataRef3 = ref(db, userID + '/smoke');
+
         onValue(dataRef, (snapshot) => {
             const data = snapshot.val();
             setTemp(data);
-            console.log(data);
-            console.log("Hello", userID);
         }
             , (error) => {
                 console.error("Error fetching data from Firebase:", error);
@@ -110,17 +112,37 @@ export default function Main({ navigation }) {
     };
 
     const getStatus = () => {
-        if (temp < 50) {
+        if (temp < 45) {
             return <Text style={[styles.status, { color: 'green' }]}> Safe</Text>;
         }
-        else return <Text style={[styles.status, { color: 'red' }]}> Critical</Text>;;
+        else if (temp < 60) {
+            return <Text style={[styles.status, { color: 'orange' }]}> Unsafe</Text>;
+        }
+        else return <Text style={[styles.status, { color: 'red' }]}> Critical</Text>;
+    }
+
+    const getSubtitle = () => {
+        let status = "";
+        if (temp < 45) {
+            status += "Temperature, humidity is normal.";
+        }
+        else if (temp < 60) {
+            status += "Your house's temperature is high.";
+        }
+        else status += "Your house's temperature is dangerously high!";
+
+        if (smoke < 100) {
+            status += "\nCarbon dioxide is at a safe level.";
+        }
+        else if (smoke < 200) {
+            status += "\nCarbon dioxide level is high.";
+        }
+        else status += "\nCarbon dioxide level is dangerously high!";
+        return status;
     }
 
     React.useEffect(() => {
-        console.log(Platform.OS);
-        const data = fetchData();
-        console.log("Hello");
-        console.log(data);
+        fetchData();
     }, []);
 
     return (
@@ -128,18 +150,27 @@ export default function Main({ navigation }) {
             <ScrollView style={{ marginTop: platform === 'web' ? 0 : 24 }}>
                 <Header logOut={() => { navigation.navigate('Login') }} />
                 <View style={styles.bodyContainer}>
-                    <Text style={styles.status}>
-                        Status:
-                        {
-                            getStatus()
-                        }
-                    </Text>
                     {
                         temp > 0 && humid > 0 && smoke >= 0 ? (
-                            <View style={styles.valuesContainer}>
-                                <TempCard value={temp} />
-                                <HumidCard value={humid} />
-                                <SmokeCard value={smoke} />
+                            <View>
+                                <Text style={styles.status}>
+                                    Status: {getStatus()}
+                                </Text>
+                                <Text style={styles.statusSub}>
+                                    {getSubtitle()}
+                                </Text>
+                                <View style={styles.valuesContainer}>
+                                    <FadeInTemp>
+                                        <TempCard value={temp} />
+                                    </FadeInTemp>
+                                    <FadeInHumid>
+                                        <HumidCard value={humid} />
+                                    </FadeInHumid>
+                                    <FadeInSmoke>
+                                        <SmokeCard value={smoke} />
+                                    </FadeInSmoke>
+                                    
+                                </View>
                             </View>
                         )
                         :
@@ -171,10 +202,13 @@ const styles = StyleSheet.create({
     },
     bodyContainer: {
         padding: 20,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     valuesContainer: {
         alignItems: 'center',
+        flexDirection: Platform.OS === 'web' ? 'row' : 'column',
+        marginTop: Platform.OS === 'web' ? 40 : 0,
+        justifyContent: 'space-evenly',
     },
     cardContainer: {
         width: Platform.OS === 'web' ? 350 : 250,
@@ -186,6 +220,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 10,
         overflow: 'hidden',
+        marginHorizontal: 20,
     },
     status: {
         fontSize: 26,
@@ -193,13 +228,19 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 40,
     },
+    statusSub: {
+        fontSize: 26,
+        fontWeight: 600,
+        textAlign: 'center',
+        marginBottom: 20,
+    },
     title: {
         fontSize: Platform.OS === 'web' ? 28 : 24,
         fontWeight: 'bold',
         color: '#fff'
     },
     value: {
-        fontSize: 30,
+        fontSize: 26,
         color: '#fff',
     },
 });
@@ -221,8 +262,8 @@ const emptyCard = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-
         elevation: 5,
+        marginTop: 40,
     },
     iconContainer: {
         flexDirection: 'row',

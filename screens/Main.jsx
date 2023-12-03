@@ -24,7 +24,7 @@ function Header({ logOut }) {
     }
     return (
         <View style={styles.header}>
-            <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#fff'}}>
+            <Text style={styles.dashboardTitle}>
                 {username}'s Home sensors
             </Text>
             <TouchableOpacity onPress={handleSignOut}>
@@ -169,12 +169,12 @@ export default function Main({ navigation }) {
 
     return (
         <ImageBackground style={styles.mainContainer} source={require('../assets/home_desktop.jpg')} resizeMode='cover'>
-            <ScrollView style={{ marginTop: platform === 'web' ? 0 : 24 }}>
-                <Header logOut={() => { navigation.navigate('Login') }} />
+            <Header logOut={() => { navigation.navigate('Login') }} />
+            <ScrollView style={{ marginTop: 0 }}>
                 <View style={styles.bodyContainer}>
                     {
                         temp > 0 && humid > 0 && smoke >= 0 ? (
-                            <View>
+                            <View style={{alignItems:'center'}}>
                                 <Text style={styles.status}>
                                     Status: {getStatus()}
                                 </Text>
@@ -210,6 +210,11 @@ export default function Main({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    dashboardTitle: { 
+        fontSize: Platform.OS === 'web' ? 30 : 24, 
+        fontWeight: 'bold', 
+        color: '#fff', 
+    },
     header: {
         width: '100%',
         height: 50,
@@ -217,6 +222,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20,
+        marginTop: Platform.OS === 'web' ? 0 : 24,
     },
     mainContainer: {
         backgroundColor: globalColors.backgroundBlue,
@@ -243,6 +249,15 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         overflow: 'hidden',
         marginHorizontal: 20,
+        shadowColor: "#000",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 7,
+        },
+        shadowOpacity: 0.43,
+        shadowRadius: 9.51,
+        elevation: 15,
     },
     status: {
         fontSize: 26,
@@ -255,6 +270,16 @@ const styles = StyleSheet.create({
         fontWeight: 600,
         textAlign: 'center',
         marginBottom: 20,
+        padding: 10,
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     title: {
         fontSize: Platform.OS === 'web' ? 28 : 24,

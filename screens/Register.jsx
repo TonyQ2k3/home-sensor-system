@@ -39,7 +39,7 @@ export default function Register({navigation}) {
             updateProfile(auth.currentUser, {
                 displayName: values.username,
             });
-            navigation.navigate('Main');
+            navigation.navigate('Dashboard');
         })
         .catch(() => {
             setValid(false);

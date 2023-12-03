@@ -28,7 +28,7 @@ export default function Login({navigation}) {
     const handleLogin = (values) => {
         signInWithEmailAndPassword(auth, values.email, values.password)
         .then(() => {
-            navigation.navigate('Main');
+            navigation.navigate('Dashboard');
         })
         .catch(() => {
             setValid(false);

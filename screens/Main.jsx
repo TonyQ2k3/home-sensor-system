@@ -24,7 +24,9 @@ function Header({ logOut }) {
     }
     return (
         <View style={styles.header}>
-            <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#fff' }}>{username}'s Home sensors</Text>
+            <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#fff'}}>
+                {username}'s Home sensors
+            </Text>
             <TouchableOpacity onPress={handleSignOut}>
                 <MaterialCommunityIcons name='exit-to-app' size={30} />
             </TouchableOpacity>
@@ -96,7 +98,7 @@ export default function Main({ navigation }) {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
         console.log("hello11" )
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', {subject: "Alert somke", to_name: "Hello everyone", message: "Alert smoke: " + temperature, sender: "Dat", receiver: currentEmail} , 'vRpK3hlM2u0_-RXFR')
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', {subject: "Alert smoke", to_name: "Hello everyone", message: "Alert smoke: " + temperature, sender: "Dat", receiver: currentEmail} , 'vRpK3hlM2u0_-RXFR')
     }
     //fetch data from realtime firebase with key "DHT11/Temperature"
     const fetchData = () => {

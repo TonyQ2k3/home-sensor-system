@@ -113,7 +113,7 @@ export default function Main({ navigation }) {
             const data = snapshot.val();
             setTemp(data);
             console.log(data);
-            if (data > 60) {
+            if (data >= 37) {
                 sendEmailTemp(data);
             }
         }
@@ -144,10 +144,10 @@ export default function Main({ navigation }) {
     };
 
     const getStatus = () => {
-        if (temp < 45) {
+        if (temp < 30 && smoke < 40) {
             return <Text style={[styles.status, { color: 'green' }]}> Safe</Text>;
         }
-        else if (temp < 60) {
+        else if (temp < 37 && smoke < 50) {
             return <Text style={[styles.status, { color: 'orange' }]}> Unsafe</Text>;
         }
         else return <Text style={[styles.status, { color: 'red' }]}> Critical</Text>;
@@ -155,18 +155,18 @@ export default function Main({ navigation }) {
 
     const getSubtitle = () => {
         let status = "";
-        if (temp < 45) {
+        if (temp <= 35) {
             status += "Temperature, humidity is normal.";
         }
-        else if (temp < 60) {
+        else if (temp < 45) {
             status += "Your house's temperature is high.";
         }
         else status += "Your house's temperature is dangerously high!";
 
-        if (smoke < 100) {
+        if (smoke < 40) {
             status += "\nCarbon dioxide is at a safe level.";
         }
-        else if (smoke < 200) {
+        else if (smoke < 50) {
             status += "\nCarbon dioxide level is high.";
         }
         else status += "\nCarbon dioxide level is dangerously high!";
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     statusSub: {
-        fontSize: 26,
+        fontSize: Platform.OS === 'web' ? 26 : 20,
         fontWeight: 600,
         textAlign: 'center',
         marginBottom: 20,

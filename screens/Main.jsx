@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Platform, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalColors } from '../globalStyles';
@@ -62,11 +62,11 @@ function SmokeCard({ value = 0 }) {
 
 function EmptyCard() {
     return (
-        <View style={emptyCard.container}> 
+        <View style={emptyCard.container}>
             <View style={emptyCard.iconContainer}>
                 <MaterialCommunityIcons name='fire-off' color='#dedede' size={40} />
-                <MaterialCommunityIcons name='water-off' color='#dedede' size={40}/>
-                <MaterialCommunityIcons name='wifi-off' color='#dedede' size={40}/>
+                <MaterialCommunityIcons name='water-off' color='#dedede' size={40} />
+                <MaterialCommunityIcons name='wifi-off' color='#dedede' size={40} />
             </View>
             <View style={emptyCard.textContainer}>
                 <Text style={emptyCard.text}>No data available. Please connect your sensors and try again.</Text>
@@ -97,20 +97,20 @@ export default function Main({ navigation }) {
     const sendEmailTemp = (temperature) => {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
-        console.log("hello11" )
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', {subject: "Alert temperature", to_name: userName, message: "Alert smoke: " + temperature, sender: "Fire alarm system", receiver: currentEmail} , 'vRpK3hlM2u0_-RXFR')
+        console.log("hello11")
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert temperature", to_name: userName, message: "Alert temperature: " + temperature, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const sendEmailHumi = (Humi) => {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
-        console.log("hello11" )
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', {subject: "Alert humidity", to_name: userName, message: "Alert smoke: " + Humi, sender: "Fire alarm system", receiver: currentEmail} , 'vRpK3hlM2u0_-RXFR')
+        console.log("hello11")
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert humidity", to_name: userName, message: "Alert humidity: " + Humi, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const sendEmailSmoke = (Smoke) => {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
-        console.log("hello11" )
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', {subject: "Alert smoke", to_name: userName, message: "Alert smoke: " + Smoke, sender: "Fire alarm system", receiver: currentEmail} , 'vRpK3hlM2u0_-RXFR')
+        console.log("hello11")
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert smoke", to_name: userName, message: "Alert smoke: " + Smoke, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const fetchData = () => {
         const dataRef = ref(db, userID + '/temperature');
@@ -121,7 +121,11 @@ export default function Main({ navigation }) {
             const data = snapshot.val();
             setTemp(data);
             console.log(data);
-            if(data > 60){
+            if(data > 50 && data < 60){
+                sendEmailTemp(data);
+            }
+
+            if (data > 60) {
                 sendEmailTemp(data);
             }
         }
@@ -131,7 +135,7 @@ export default function Main({ navigation }) {
         onValue(dataRef2, (snapshot) => {
             const data = snapshot.val();
             setHumid(data);
-            if(data < 10){
+            if (data < 20) {
                 sendEmailHumi(data);
             }
 
@@ -141,8 +145,8 @@ export default function Main({ navigation }) {
             });
         onValue(dataRef3, (snapshot) => {
             const data = snapshot.val();
-            setSmoke(data); 
-            if(data > 60){
+            setSmoke(data);
+            if (data > 60) {
                 sendEmailSmoke(data);
             }
         }
@@ -192,7 +196,7 @@ export default function Main({ navigation }) {
                 <View style={styles.bodyContainer}>
                     {
                         temp > 0 && humid > 0 && smoke >= 0 ? (
-                            <View style={{alignItems:'center'}}>
+                            <View style={{ alignItems: 'center' }}>
                                 <Text style={styles.status}>
                                     Status: {getStatus()}
                                 </Text>
@@ -209,18 +213,18 @@ export default function Main({ navigation }) {
                                     <FadeInSmoke>
                                         <SmokeCard value={smoke} />
                                     </FadeInSmoke>
-                                    
+
                                 </View>
                             </View>
                         )
-                        :
-                        (
-                            <View style={{height: '100%', justifyContent: 'center'}}>
-                                <EmptyCard />
-                            </View>
-                        )
+                            :
+                            (
+                                <View style={{ height: '100%', justifyContent: 'center' }}>
+                                    <EmptyCard />
+                                </View>
+                            )
                     }
-                    
+
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -228,10 +232,10 @@ export default function Main({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    dashboardTitle: { 
-        fontSize: Platform.OS === 'web' ? 30 : 24, 
-        fontWeight: 'bold', 
-        color: '#fff', 
+    dashboardTitle: {
+        fontSize: Platform.OS === 'web' ? 30 : 24,
+        fontWeight: 'bold',
+        color: '#fff',
     },
     header: {
         width: '100%',

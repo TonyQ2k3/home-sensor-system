@@ -75,15 +75,7 @@ function EmptyCard() {
     )
 }
 
-// const sendEmailTemp = ()=>{
-//     console.log("hello11" )
-//     emailjs.sendForm('service_0oexdbn', 'template_n8kb5iz', form.target, 'vRpK3hlM2u0_-RXFR')
-//     .then((result) => {
-//         console.log(result.text);
-//     }, (error) => {
-//         console.log(error.text);
-//     });
-// }
+
 export default function Main({ navigation }) {
     const platform = Platform.OS;
     const userID = auth.currentUser.uid;
@@ -121,10 +113,6 @@ export default function Main({ navigation }) {
             const data = snapshot.val();
             setTemp(data);
             console.log(data);
-            if(data > 50 && data < 60){
-                sendEmailTemp(data);
-            }
-
             if (data > 60) {
                 sendEmailTemp(data);
             }

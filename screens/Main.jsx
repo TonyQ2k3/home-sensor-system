@@ -14,10 +14,6 @@ function Header({ logOut }) {
 
     const handleSignOut = () => {
         signOut(auth).then(() => {
-            // if (confirm("Do you want to sign out?")) {
-            //     logOut();
-            //     alert('You logged out successfully');
-            // }
             logOut();
         }).catch((error) => {
             console.log(error);
@@ -78,65 +74,59 @@ function EmptyCard() {
 
 
 export default function Main({ navigation }) {
-    const platform = Platform.OS;
     const userID = auth.currentUser.uid;
     const userName = auth.currentUser.displayName;
+    const currentEmail = auth.currentUser.email;
 
     const [temp, setTemp] = React.useState(0);
     const [humid, setHumid] = React.useState(0);
     const [smoke, setSmoke] = React.useState(0);
 
-    //function send email
+    // function send email
     const sendEmailTemp = (temperature) => {
-        const currentEmail = auth.currentUser.email;
-        console.log(currentEmail)
-        console.log("hello11")
         emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert temperature", status: "temperature", to_name: userName, message: "Alert temperature: " + temperature, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const sendEmailHumi = (Humi) => {
-        const currentEmail = auth.currentUser.email;
-        console.log(currentEmail)
-        console.log("hello11")
         emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert humidity", status: "humidity", to_name: userName, message: "Alert humidity: " + Humi, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const sendEmailSmoke = (Smoke) => {
-        const currentEmail = auth.currentUser.email;
-        console.log(currentEmail)
-        console.log("hello11")
         emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert smoke",status: "cacbon monoxide", to_name: userName, message: "Alert smoke: " + Smoke, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
+
     const fetchData = () => {
-        const dataRef = ref(db, userID + '/temperature');
-        const dataRef2 = ref(db, userID + '/humidity');
-        const dataRef3 = ref(db, userID + '/smoke');
+        const tempRef = ref(db, userID + '/temperature');
+        const humidRef = ref(db, userID + '/humidity');
+        const smokeRef = ref(db, userID + '/smoke');
 
-        onValue(dataRef, (snapshot) => {
-            const data = snapshot.val();
-            setTemp(data);
-            console.log(data);
-            if (data >= 37) {
-                sendEmailTemp(data);
+        onValue(tempRef, (snapshot) => {
+            const t = snapshot.val();
+            setTemp(t);
+            console.log(temp);
+            if (temp >= 37) {
+                sendEmailTemp(temp);
             }
         }
             , (error) => {
                 console.error("Error fetching data from Firebase:", error);
             });
-        onValue(dataRef2, (snapshot) => {
-            const data = snapshot.val();
-            setHumid(data);
-            if (data < 20) {
-                sendEmailHumi(data);
+
+        onValue(humidRef, (snapshot) => {
+            const h = snapshot.val();
+            setHumid(h);
+            if (humid < 20) {
+                sendEmailHumi(humid);
             }
 
         }
             , (error) => {
                 console.error("Error fetching data from Firebase:", error);
             });
-        onValue(dataRef3, (snapshot) => {
-            const data = snapshot.val();
-            setSmoke(data);
-            if (data > 60) {
-                sendEmailSmoke(data);
+
+        onValue(smokeRef, (snapshot) => {
+            const s = snapshot.val();
+            setSmoke(s);
+            if (smoke > 60) {
+                sendEmailSmoke(smoke);
             }
         }
             , (error) => {
@@ -303,7 +293,6 @@ const styles = StyleSheet.create({
     },
 });
 
-
 const emptyCard = StyleSheet.create({
     container: {
         width: 300,
@@ -335,3 +324,4 @@ const emptyCard = StyleSheet.create({
         flexWrap: 'wrap'
     },
 });
+

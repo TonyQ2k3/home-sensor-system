@@ -14,10 +14,11 @@ function Header({ logOut }) {
 
     const handleSignOut = () => {
         signOut(auth).then(() => {
-            if (confirm("Do you want to sign out?")) {
-                logOut();
-                alert('You logged out successfully');
-            }
+            // if (confirm("Do you want to sign out?")) {
+            //     logOut();
+            //     alert('You logged out successfully');
+            // }
+            logOut();
         }).catch((error) => {
             console.log(error);
         });
@@ -90,19 +91,19 @@ export default function Main({ navigation }) {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
         console.log("hello11")
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert temperature", to_name: userName, message: "Alert temperature: " + temperature, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert temperature", status: "temperature", to_name: userName, message: "Alert temperature: " + temperature, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const sendEmailHumi = (Humi) => {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
         console.log("hello11")
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert humidity", to_name: userName, message: "Alert humidity: " + Humi, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert humidity", status: "humidity", to_name: userName, message: "Alert humidity: " + Humi, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const sendEmailSmoke = (Smoke) => {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
         console.log("hello11")
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert smoke", to_name: userName, message: "Alert smoke: " + Smoke, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert smoke",status: "cacbon monoxide", to_name: userName, message: "Alert smoke: " + Smoke, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const fetchData = () => {
         const dataRef = ref(db, userID + '/temperature');
@@ -144,10 +145,10 @@ export default function Main({ navigation }) {
     };
 
     const getStatus = () => {
-        if (temp < 30 && smoke < 40) {
+        if (temp < 40 && smoke < 40) {
             return <Text style={[styles.status, { color: 'green' }]}> Safe</Text>;
         }
-        else if (temp < 37 && smoke < 50) {
+        else if (temp < 45 && smoke < 50) {
             return <Text style={[styles.status, { color: 'orange' }]}> Unsafe</Text>;
         }
         else return <Text style={[styles.status, { color: 'red' }]}> Critical</Text>;
@@ -155,7 +156,7 @@ export default function Main({ navigation }) {
 
     const getSubtitle = () => {
         let status = "";
-        if (temp <= 35) {
+        if (temp < 40) {
             status += "Temperature, humidity is normal.";
         }
         else if (temp < 45) {

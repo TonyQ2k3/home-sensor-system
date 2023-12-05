@@ -90,19 +90,19 @@ export default function Main({ navigation }) {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
         console.log("hello11")
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert temperature", to_name: userName, message: "Alert temperature: " + temperature, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert temperature", to_name: userName, status: "temperature", message: "Alert temperature: " + temperature, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const sendEmailHumi = (Humi) => {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
         console.log("hello11")
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert humidity", to_name: userName, message: "Alert humidity: " + Humi, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert humidity", to_name: userName, status: "humidity", message: "Alert humidity: " + Humi, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const sendEmailSmoke = (Smoke) => {
         const currentEmail = auth.currentUser.email;
         console.log(currentEmail)
         console.log("hello11")
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert smoke", to_name: userName, message: "Alert smoke: " + Smoke, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert smoke", to_name: userName, status: "cacbon monoxide", message: "Alert smoke: " + Smoke, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
     }
     const fetchData = () => {
         const dataRef = ref(db, userID + '/temperature');

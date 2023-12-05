@@ -113,7 +113,7 @@ export default function Main({ navigation }) {
         onValue(humidRef, (snapshot) => {
             const h = snapshot.val();
             setHumid(h);
-            if (humid < 20) {
+            if (humid < 20 && humid > 0) {
                 sendEmailHumi(humid);
             }
 

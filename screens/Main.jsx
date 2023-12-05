@@ -52,7 +52,7 @@ function SmokeCard({ value = 0 }) {
     return (
         <ImageBackground source={require('../assets/smoke.jpg')} style={styles.cardContainer} resizeMode='cover'>
             <Text style={styles.title}>Smoke level</Text>
-            <Text style={styles.value}>{value}</Text>
+            <Text style={styles.value}>{value} %</Text>
         </ImageBackground>
     )
 }
@@ -102,7 +102,7 @@ export default function Main({ navigation }) {
             const t = snapshot.val();
             setTemp(t);
             console.log(temp);
-            if (temp >= 37) {
+            if (temp >= 40) {
                 sendEmailTemp(temp);
             }
         }
@@ -147,7 +147,7 @@ export default function Main({ navigation }) {
     const getSubtitle = () => {
         let status = "";
         if (temp < 40) {
-            status += "Temperature, humidity is normal.";
+            status += "Your house's temperature is normal.";
         }
         else if (temp < 45) {
             status += "Your house's temperature is high.";

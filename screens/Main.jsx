@@ -85,12 +85,15 @@ export default function Main({ navigation }) {
     // function send email
     const sendEmailTemp = (temperature) => {
         emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert temperature", status: "temperature", to_name: userName, status: "temperature", message: "Alert temperature: " + temperature, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        console.log("Email sent!");
     }
     const sendEmailHumi = (Humi) => {
         emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert humidity", status: "humidity", to_name: userName, status: "humidity", message: "Alert humidity: " + Humi, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        console.log("Email sent!");
     }
     const sendEmailSmoke = (Smoke) => {
         emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert smoke",status: "cacbon monoxide", to_name: userName, status: "cacbon monoxide", message: "Alert smoke: " + Smoke, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
+        console.log("Email sent!");
     }
 
     const fetchData = () => {
@@ -101,9 +104,8 @@ export default function Main({ navigation }) {
         onValue(tempRef, (snapshot) => {
             const t = snapshot.val();
             setTemp(t);
-            console.log(temp);
-            if (temp >= 40) {
-                sendEmailTemp(temp);
+            if (t >= 40) {
+                sendEmailTemp(t);
             }
         }
             , (error) => {
@@ -113,8 +115,8 @@ export default function Main({ navigation }) {
         onValue(humidRef, (snapshot) => {
             const h = snapshot.val();
             setHumid(h);
-            if (humid < 20 && humid > 0) {
-                sendEmailHumi(humid);
+            if (h < 20 && h > 0) {
+                sendEmailHumi(h);
             }
 
         }
@@ -125,8 +127,8 @@ export default function Main({ navigation }) {
         onValue(smokeRef, (snapshot) => {
             const s = snapshot.val();
             setSmoke(s);
-            if (smoke > 60) {
-                sendEmailSmoke(smoke);
+            if (s >= 60) {
+                sendEmailSmoke(s);
             }
         }
             , (error) => {

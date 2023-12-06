@@ -155,12 +155,12 @@ export default function Main({ navigation }) {
         else status += "Your house's temperature is dangerously high!";
 
         if (smoke < 40) {
-            status += "\nCarbon dioxide is at a safe level.";
+            status += "\nCarbon monoxide is at a safe level.";
         }
         else if (smoke < 50) {
-            status += "\nCarbon dioxide level is high.";
+            status += "\nCarbon monoxide level is high.";
         }
-        else status += "\nCarbon dioxide level is dangerously high!";
+        else status += "\nCarbon monoxide level is dangerously high!";
         return status;
     }
 

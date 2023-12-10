@@ -36,4 +36,5 @@ yarn-error.*
 
 
 # firebase
-firebase.js
+utils/
+utils/firebase.js

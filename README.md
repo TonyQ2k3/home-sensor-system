@@ -13,5 +13,12 @@ Q2D Home sensor system is a project that allows users to monitor temperature, hu
 ![Fire sensor interior](/images/system_2.jpg)
 
 ### Monitoring app
-![Web app](/images/app_web.png)
-![Mobile app](/images/app_mobile.jpg)
+![Web app login](/images/app_web_login.png) 
+![Web app login](/images/app_web_register.png) 
+![Web app](/images/app_web.png) 
+
+<div align="center">
+  <img src="./images/app_mobile_login.jpg" height="500">
+  <img src="./images/app_mobile_register.jpg" height="500">
+  <img src="./images/app_mobile.jpg" height="500">
+</div>

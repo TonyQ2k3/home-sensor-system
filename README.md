@@ -7,6 +7,14 @@ Q2D Home sensor system is a project that allows users to monitor temperature, hu
 + Send warning emails to users upon detecting unsual values from sensors.
 + Features LED and speaker to alert when there's a fire.
 
+## 🔌 Sensor device
+![Fire sensor](/images/circuit_map.png) 
+### Device components:
++ ESP8266
++ DHT11
++ MQ-7
++ LED & Small speaker (for fire alarm)
+
 ## 📸 Images
 ### Fire sensor box
 ![Fire sensor](/images/system_1.jpg) 

@@ -83,10 +83,17 @@ export default function Main({ navigation }) {
     const [smoke, setSmoke] = React.useState(0);
 
     // function send email
-    const sendEmailTemp = (temperature) => {
-        emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert temperature", status: "temperature", to_name: userName, status: "temperature", message: "Alert temperature: " + temperature, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
-        console.log("Email sent!");
-    }
+const sendEmailTemp = (temperature) => {
+    emailjs.send('service_0oexdbn', 'template_n8kb5iz', 
+    { 
+        subject: "Alert temperature", 
+        to_name: userName, 
+        message: "Alert temperature: " + temperature, 
+        sender: "Fire alarm system", 
+        receiver: currentEmail 
+    });
+    console.log("Email sent!");
+}
     const sendEmailHumi = (Humi) => {
         emailjs.send('service_0oexdbn', 'template_n8kb5iz', { subject: "Alert humidity", status: "humidity", to_name: userName, status: "humidity", message: "Alert humidity: " + Humi, sender: "Fire alarm system", receiver: currentEmail }, 'vRpK3hlM2u0_-RXFR')
         console.log("Email sent!");
@@ -107,10 +114,9 @@ export default function Main({ navigation }) {
             if (t >= 40) {
                 sendEmailTemp(t);
             }
-        }
-            , (error) => {
-                console.error("Error fetching data from Firebase:", error);
-            });
+        }, (error) => {
+            console.error("Error fetching data from Firebase:", error);
+        });
 
         onValue(humidRef, (snapshot) => {
             const h = snapshot.val();
@@ -118,11 +124,9 @@ export default function Main({ navigation }) {
             if (h < 20 && h > 0) {
                 sendEmailHumi(h);
             }
-
-        }
-            , (error) => {
-                console.error("Error fetching data from Firebase:", error);
-            });
+        }, (error) => {
+            console.error("Error fetching data from Firebase:", error);
+        });
 
         onValue(smokeRef, (snapshot) => {
             const s = snapshot.val();
@@ -130,10 +134,9 @@ export default function Main({ navigation }) {
             if (s >= 60) {
                 sendEmailSmoke(s);
             }
-        }
-            , (error) => {
-                console.error("Error fetching data from Firebase:", error);
-            });
+        }, (error) => {
+            console.error("Error fetching data from Firebase:", error);
+        });
     };
 
     const getStatus = () => {

@@ -3,12 +3,13 @@
 #include <ArduinoJson.h>
 #include <DHT.h>  
 
-#define FIREBASE_HOST "https://adruino-7b5a8-default-rtdb.firebaseio.com"
-#define FIREBASE_AUTH "GW1i69YZFfrOktu8Nu6L1JFpQEt3GrF3xwoeiW8M"
-#define WIFI_SSID "Tony's Network"
-#define WIFI_PASSWORD "01122003"     
+#define FIREBASE_HOST "Firebase Realtime Database URL"
+#define FIREBASE_AUTH "Firebase App Auth Token"
+#define WIFI_SSID "Your Wifi SSID"
+#define WIFI_PASSWORD "Your Wifi Password"  
 
-String ID = "3TL73tRTSEfiPSvulZIoeJtNbOE2";
+// Create an user with Firebase Authentication, then copy that user's ID
+String ID = "Firebase auth user id";
 
 int led = 5; 
 int buzzer = D6;

@@ -38,3 +38,4 @@ yarn-error.*
 # firebase
 utils/
 utils/firebase.js
+.vscode/settings.json

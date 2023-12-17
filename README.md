@@ -54,4 +54,5 @@ npx expo start
 ```
 String ID = "Firebase auth user id";
 ```
+6. Start Arduino IDE, choose board, port and click Upload.
 
